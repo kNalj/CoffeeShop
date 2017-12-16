@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="cSharpCoffeeShopDatabaseModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="cSharpCoffeeShopDatabaseModelStoreContainer">
+    <EntitySet Name="sysdiagrams" EntityType="cSharpCoffeeShopDatabaseModel.Store.sysdiagrams" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TblProduct" EntityType="cSharpCoffeeShopDatabaseModel.Store.TblProduct" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TblProductType" EntityType="cSharpCoffeeShopDatabaseModel.Store.TblProductType" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TblTransaction" EntityType="cSharpCoffeeShopDatabaseModel.Store.TblTransaction" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TblTransactionItem" EntityType="cSharpCoffeeShopDatabaseModel.Store.TblTransactionItem" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_TblProduct_TblProductType" Association="cSharpCoffeeShopDatabaseModel.Store.FK_TblProduct_TblProductType">
+      <End Role="TblProductType" EntitySet="TblProductType" />
+      <End Role="TblProduct" EntitySet="TblProduct" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TblTransactionItem_TblProduct" Association="cSharpCoffeeShopDatabaseModel.Store.FK_TblTransactionItem_TblProduct">
+      <End Role="TblProduct" EntitySet="TblProduct" />
+      <End Role="TblTransactionItem" EntitySet="TblTransactionItem" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TblTransactionItem_TblTransaction" Association="cSharpCoffeeShopDatabaseModel.Store.FK_TblTransactionItem_TblTransaction">
+      <End Role="TblTransaction" EntitySet="TblTransaction" />
+      <End Role="TblTransactionItem" EntitySet="TblTransactionItem" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" Nullable="false" MaxLength="128" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="TblProduct">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="ProductType" Type="int" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="Price" Type="money" />
+    <Property Name="Image" Type="image" />
+  </EntityType>
+  <EntityType Name="TblProductType">
+    <Key>
+      <PropertyRef Name="ProductType" />
+    </Key>
+    <Property Name="ProductType" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Description" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="TblTransaction">
+    <Key>
+      <PropertyRef Name="TransactionID" />
+    </Key>
+    <Property Name="TransactionID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="TransactionDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="TblTransactionItem">
+    <Key>
+      <PropertyRef Name="TransactionItemID" />
+    </Key>
+    <Property Name="TransactionItemID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="TransactionID" Type="int" />
+    <Property Name="ProductID" Type="int" />
+  </EntityType>
+  <Association Name="FK_TblProduct_TblProductType">
+    <End Role="TblProductType" Type="cSharpCoffeeShopDatabaseModel.Store.TblProductType" Multiplicity="0..1" />
+    <End Role="TblProduct" Type="cSharpCoffeeShopDatabaseModel.Store.TblProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TblProductType">
+        <PropertyRef Name="ProductType" />
+      </Principal>
+      <Dependent Role="TblProduct">
+        <PropertyRef Name="ProductType" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TblTransactionItem_TblProduct">
+    <End Role="TblProduct" Type="cSharpCoffeeShopDatabaseModel.Store.TblProduct" Multiplicity="0..1" />
+    <End Role="TblTransactionItem" Type="cSharpCoffeeShopDatabaseModel.Store.TblTransactionItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TblProduct">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="TblTransactionItem">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TblTransactionItem_TblTransaction">
+    <End Role="TblTransaction" Type="cSharpCoffeeShopDatabaseModel.Store.TblTransaction" Multiplicity="0..1" />
+    <End Role="TblTransactionItem" Type="cSharpCoffeeShopDatabaseModel.Store.TblTransactionItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TblTransaction">
+        <PropertyRef Name="TransactionID" />
+      </Principal>
+      <Dependent Role="TblTransactionItem">
+        <PropertyRef Name="TransactionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="fn_diagramobjects" ReturnType="int" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+</Schema>
